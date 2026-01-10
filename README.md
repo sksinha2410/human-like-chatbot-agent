@@ -2,6 +2,8 @@
 
 A sophisticated conversational AI chatbot with empathy, contextual awareness, long-term memory, and human-like personality. Built with Google Gemini API, MongoDB, and Node.js/TypeScript.
 
+**🌐 Live Demo**: [Try it on GitHub Pages](https://sksinha2410.github.io/human-like-chatbot-agent/)
+
 ## 🌟 Features
 
 - **Human-Like Interaction**: Natural, emotionally engaging conversations with authentic responses
@@ -261,6 +263,8 @@ Bot: I'm Alex!
 The chatbot UI is available as a static website on GitHub Pages:
 
 **Live Demo**: [https://sksinha2410.github.io/human-like-chatbot-agent/](https://sksinha2410.github.io/human-like-chatbot-agent/)
+
+**📖 Setup Guide**: See [GITHUB_PAGES_SETUP.md](GITHUB_PAGES_SETUP.md) for detailed instructions on enabling GitHub Pages and connecting to your backend.
 
 To use it:
 1. Visit the GitHub Pages URL
