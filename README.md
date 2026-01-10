@@ -140,6 +140,10 @@ npm start
 
 The server will start on `http://localhost:3000`
 
+### 6. Test the Frontend (Optional)
+
+Open `test-client.html` in your browser to interact with the chatbot locally, or visit the [GitHub Pages frontend](https://sksinha2410.github.io/human-like-chatbot-agent/) and configure it to use `http://localhost:3000`.
+
 ## 🔧 API Usage
 
 ### Chat Endpoint
@@ -252,20 +256,36 @@ Bot: I'm Alex!
 
 ## 📦 Deployment
 
-### Deploy to Render
+### GitHub Pages (Frontend Only)
+
+The chatbot UI is available as a static website on GitHub Pages:
+
+**Live Demo**: [https://sksinha2410.github.io/human-like-chatbot-agent/](https://sksinha2410.github.io/human-like-chatbot-agent/)
+
+To use it:
+1. Visit the GitHub Pages URL
+2. Click the ⚙️ Settings button
+3. Enter your deployed backend API URL
+4. Start chatting!
+
+**Note**: GitHub Pages only hosts the frontend. You still need to deploy the backend API separately (see options below).
+
+### Deploy Backend to Render
 
 1. Create a new Web Service on [Render](https://render.com)
 2. Connect your GitHub repository
 3. Configure environment variables in Render dashboard
 4. Deploy!
+5. Use the Render URL in the GitHub Pages frontend settings
 
-### Deploy to Railway
+### Deploy Backend to Railway
 
 1. Install Railway CLI: `npm i -g @railway/cli`
 2. Login: `railway login`
 3. Initialize: `railway init`
 4. Add MongoDB plugin: `railway add mongodb`
 5. Deploy: `railway up`
+6. Use the Railway URL in the GitHub Pages frontend settings
 
 ### Deploy with Docker
 
