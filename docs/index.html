@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Human-Like Chatbot Agent</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .container {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            width: 100%;
+            max-width: 800px;
+            height: 90vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 24px;
+            margin-bottom: 5px;
+        }
+        
+        .header p {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+        
+        .config-section {
+            padding: 15px;
+            background: #fff3cd;
+            border-bottom: 1px solid #ffc107;
+        }
+        
+        .config-section.hidden {
+            display: none;
+        }
+        
+        .config-label {
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 5px;
+            color: #856404;
+        }
+        
+        .config-input {
+            width: 100%;
+            padding: 8px 12px;
+            border: 1px solid #ffc107;
+            border-radius: 4px;
+            font-size: 13px;
+        }
+        
+        .config-button {
+            margin-top: 8px;
+            padding: 6px 12px;
+            background: #ffc107;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 600;
+            color: #856404;
+        }
+        
+        .config-button:hover {
+            background: #e0a800;
+        }
+        
+        .messages {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            background: #f5f5f5;
+        }
+        
+        .message {
+            margin-bottom: 16px;
+            display: flex;
+            animation: slideIn 0.3s ease;
+        }
+        
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .message.user {
+            justify-content: flex-end;
+        }
+        
+        .message-content {
+            max-width: 70%;
+            padding: 12px 16px;
+            border-radius: 12px;
+            word-wrap: break-word;
+        }
+        
+        .message.user .message-content {
+            background: #667eea;
+            color: white;
+            border-bottom-right-radius: 4px;
+        }
+        
+        .message.bot .message-content {
+            background: white;
+            color: #333;
+            border-bottom-left-radius: 4px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        .message-time {
+            font-size: 11px;
+            opacity: 0.7;
+            margin-top: 4px;
+        }
+        
+        .input-area {
+            padding: 20px;
+            background: white;
+            border-top: 1px solid #e0e0e0;
+        }
+        
+        .input-container {
+            display: flex;
+            gap: 10px;
+        }
+        
+        #messageInput {
+            flex: 1;
+            padding: 12px 16px;
+            border: 2px solid #e0e0e0;
+            border-radius: 24px;
+            font-size: 14px;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+        
+        #messageInput:focus {
+            border-color: #667eea;
+        }
+        
+        #sendButton {
+            padding: 12px 24px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 24px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        
+        #sendButton:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+        }
+        
+        #sendButton:active {
+            transform: translateY(0);
+        }
+        
+        #sendButton:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .typing {
+            padding: 12px 16px;
+            background: white;
+            border-radius: 12px;
+            display: inline-block;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        .typing span {
+            height: 10px;
+            width: 10px;
+            background: #667eea;
+            border-radius: 50%;
+            display: inline-block;
+            margin: 0 2px;
+            animation: bounce 1.4s infinite ease-in-out both;
+        }
+        
+        .typing span:nth-child(1) {
+            animation-delay: -0.32s;
+        }
+        
+        .typing span:nth-child(2) {
+            animation-delay: -0.16s;
+        }
+        
+        @keyframes bounce {
+            0%, 80%, 100% {
+                transform: scale(0);
+            }
+            40% {
+                transform: scale(1);
+            }
+        }
+        
+        .info {
+            padding: 10px;
+            background: #e3f2fd;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            font-size: 12px;
+            color: #1565c0;
+        }
+        
+        .error {
+            padding: 10px;
+            background: #ffebee;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            font-size: 12px;
+            color: #c62828;
+        }
+        
+        .settings-toggle {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            padding: 8px 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        
+        .settings-toggle:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <button class="settings-toggle" onclick="toggleSettings()">⚙️ Settings</button>
+            <h1>🤖 Human-Like Chatbot Agent</h1>
+            <p>Test the chatbot's memory, empathy, and conversational abilities</p>
+        </div>
+        
+        <div class="config-section" id="configSection">
+            <div class="config-label">API Endpoint URL:</div>
+            <input 
+                type="text" 
+                id="apiUrlInput" 
+                class="config-input"
+                placeholder="https://your-backend-url.com"
+            />
+            <button class="config-button" onclick="saveApiUrl()">Save & Connect</button>
+            <div style="margin-top: 8px; font-size: 11px; color: #856404;">
+                Enter the URL of your deployed chatbot backend (without /api/chat)
+            </div>
+        </div>
+        
+        <div class="messages" id="messages">
+            <div class="info">
+                <strong>Welcome to the Human-Like Chatbot Agent!</strong><br><br>
+                This chatbot demonstrates:<br>
+                • Long-term memory across conversations<br>
+                • Context-aware tone adaptation<br>
+                • Natural, human-like responses<br>
+                • Identity consistency<br>
+                • Hallucination resistance<br><br>
+                <strong>To get started:</strong><br>
+                1. Configure the API endpoint in Settings (⚙️) above<br>
+                2. Start chatting!<br><br>
+                <strong>Test Instructions:</strong><br>
+                • Try introducing yourself with your name and interests<br>
+                • Ask emotional questions to test tone adaptation<br>
+                • Test memory by asking about what you told earlier<br>
+                • Try trick questions to test identity consistency<br>
+                • Ask impossible questions to test hallucination resistance
+            </div>
+        </div>
+        
+        <div class="input-area">
+            <div class="input-container">
+                <input 
+                    type="text" 
+                    id="messageInput" 
+                    placeholder="Configure API endpoint first..."
+                    autocomplete="off"
+                    disabled
+                />
+                <button id="sendButton" disabled>Send</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // API Configuration
+        let API_URL = localStorage.getItem('chatbot_api_url') || '';
+        const userId = 'web-user-' + Date.now();
+        let sessionId = null;
+        let isConnected = false;
+
+        const messagesDiv = document.getElementById('messages');
+        const messageInput = document.getElementById('messageInput');
+        const sendButton = document.getElementById('sendButton');
+        const apiUrlInput = document.getElementById('apiUrlInput');
+        const configSection = document.getElementById('configSection');
+
+        // Initialize
+        function init() {
+            apiUrlInput.value = API_URL;
+            if (API_URL) {
+                configSection.classList.add('hidden');
+                connectToApi();
+            }
+        }
+
+        function toggleSettings() {
+            configSection.classList.toggle('hidden');
+        }
+
+        function saveApiUrl() {
+            const url = apiUrlInput.value.trim();
+            if (!url) {
+                addErrorMessage('Please enter a valid API URL');
+                return;
+            }
+            
+            // Remove trailing slash if present
+            API_URL = url.replace(/\/$/, '');
+            localStorage.setItem('chatbot_api_url', API_URL);
+            
+            configSection.classList.add('hidden');
+            connectToApi();
+        }
+
+        async function connectToApi() {
+            try {
+                // Test connection
+                const response = await fetch(`${API_URL}/api/health`);
+                if (!response.ok) throw new Error('API not responding');
+                
+                isConnected = true;
+                messageInput.disabled = false;
+                sendButton.disabled = false;
+                messageInput.placeholder = 'Type your message here...';
+                messageInput.focus();
+                
+                // Fetch persona and add welcome message
+                fetchPersona();
+            } catch (error) {
+                isConnected = false;
+                addErrorMessage(`Unable to connect to API at ${API_URL}. Please check the URL and try again.`);
+                configSection.classList.remove('hidden');
+            }
+        }
+
+        function addMessage(content, isUser) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${isUser ? 'user' : 'bot'}`;
+            
+            const contentDiv = document.createElement('div');
+            contentDiv.className = 'message-content';
+            contentDiv.textContent = content;
+            
+            const time = new Date().toLocaleTimeString('en-US', { 
+                hour: '2-digit', 
+                minute: '2-digit' 
+            });
+            
+            const timeDiv = document.createElement('div');
+            timeDiv.className = 'message-time';
+            timeDiv.textContent = time;
+            
+            contentDiv.appendChild(timeDiv);
+            messageDiv.appendChild(contentDiv);
+            messagesDiv.appendChild(messageDiv);
+            
+            messagesDiv.scrollTop = messagesDiv.scrollHeight;
+        }
+
+        function addErrorMessage(content) {
+            const errorDiv = document.createElement('div');
+            errorDiv.className = 'error';
+            errorDiv.textContent = '⚠️ ' + content;
+            messagesDiv.appendChild(errorDiv);
+            messagesDiv.scrollTop = messagesDiv.scrollHeight;
+        }
+
+        function showTyping() {
+            const typingDiv = document.createElement('div');
+            typingDiv.className = 'message bot';
+            typingDiv.id = 'typing-indicator';
+            
+            const typingContent = document.createElement('div');
+            typingContent.className = 'typing';
+            typingContent.innerHTML = '<span></span><span></span><span></span>';
+            
+            typingDiv.appendChild(typingContent);
+            messagesDiv.appendChild(typingDiv);
+            messagesDiv.scrollTop = messagesDiv.scrollHeight;
+        }
+
+        function hideTyping() {
+            const typingIndicator = document.getElementById('typing-indicator');
+            if (typingIndicator) {
+                typingIndicator.remove();
+            }
+        }
+
+        async function sendMessage() {
+            const message = messageInput.value.trim();
+            if (!message || !isConnected) return;
+
+            // Add user message
+            addMessage(message, true);
+            messageInput.value = '';
+            sendButton.disabled = true;
+
+            // Show typing indicator
+            showTyping();
+
+            try {
+                const response = await fetch(`${API_URL}/api/chat`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        userId,
+                        message,
+                        sessionId,
+                    }),
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const data = await response.json();
+                
+                // Hide typing and add bot response
+                hideTyping();
+                
+                if (data.reply) {
+                    sessionId = data.sessionId;
+                    addMessage(data.reply, false);
+                } else {
+                    addMessage('Sorry, I encountered an error. Please try again.', false);
+                }
+            } catch (error) {
+                hideTyping();
+                addErrorMessage('Unable to get response from chatbot. ' + error.message);
+                isConnected = false;
+                messageInput.disabled = true;
+                sendButton.disabled = true;
+                configSection.classList.remove('hidden');
+            } finally {
+                if (isConnected) {
+                    sendButton.disabled = false;
+                    messageInput.focus();
+                }
+            }
+        }
+
+        async function fetchPersona() {
+            try {
+                const response = await fetch(`${API_URL}/api/persona`);
+                const persona = await response.json();
+                setTimeout(() => {
+                    addMessage(`Hey! I'm ${persona.name}. What's your name?`, false);
+                }, 500);
+            } catch (error) {
+                setTimeout(() => {
+                    addMessage("Hey! What's your name?", false);
+                }, 500);
+            }
+        }
+
+        sendButton.addEventListener('click', sendMessage);
+        messageInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                sendMessage();
+            }
+        });
+
+        // Initialize on load
+        init();
+    </script>
+</body>
+</html>
