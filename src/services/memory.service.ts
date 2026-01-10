@@ -73,14 +73,14 @@ class MemoryService {
     }
 
     // Extract location information
-    const locationMatch = userMessage.match(/(?:i live in|i'm from|from)\s+([A-Z][a-z]+(?:\s+[A-Z][a-z]+)*)/);
+    const locationMatch = userMessage.match(/(?:i live in|i'm from|from)\s+([a-zA-Z]+(?:\s+[a-zA-Z]+)*)/i);
     if (locationMatch && locationMatch[1]) {
-      profile.personalDetails.location = locationMatch[1];
+      profile.personalDetails.location = locationMatch[1].split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase()).join(' ');
       await this.updateUserProfile(userId, { personalDetails: profile.personalDetails });
     }
 
     // Extract color preferences
-    const colorMatch = userMessage.match(/(?:favorite color is|like)\s+(red|blue|green|yellow|purple|orange|pink|black|white)/i);
+    const colorMatch = userMessage.match(/(?:favorite color is|like|color is)\s+(red|blue|green|yellow|purple|orange|pink|black|white|brown|gray|grey|gold|silver|violet|indigo|turquoise|cyan|magenta|maroon|navy|teal|olive|lime|aqua|fuchsia|beige|tan|cream|ivory)/i);
     if (colorMatch && colorMatch[1]) {
       profile.preferences.favoriteColor = colorMatch[1].toLowerCase();
       await this.updateUserProfile(userId, { preferences: profile.preferences });

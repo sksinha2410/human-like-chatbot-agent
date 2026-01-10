@@ -341,10 +341,19 @@
         // Focus input on load
         messageInput.focus();
 
-        // Add welcome message
-        setTimeout(() => {
-            addMessage("Hey! I'm Alex. What's your name?", false);
-        }, 500);
+        // Fetch persona and add welcome message
+        fetch(`${API_URL}/api/persona`)
+            .then(res => res.json())
+            .then(persona => {
+                setTimeout(() => {
+                    addMessage(`Hey! I'm ${persona.name}. What's your name?`, false);
+                }, 500);
+            })
+            .catch(() => {
+                setTimeout(() => {
+                    addMessage("Hey! What's your name?", false);
+                }, 500);
+            });
     </script>
 </body>
 </html>
