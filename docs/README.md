@@ -4,7 +4,8 @@ This is the GitHub Pages hosted frontend for the Human-Like Chatbot Agent.
 
 ## Usage
 
-1. **Visit the hosted page**: The frontend is available at `https://sksinha2410.github.io/human-like-chatbot-agent/`
+1. **Visit the hosted page**: The frontend is available at `https://YOUR_USERNAME.github.io/human-like-chatbot-agent/`
+   (Replace `YOUR_USERNAME` with your GitHub username)
 
 2. **Configure the API endpoint**:
    - Click the ⚙️ Settings button in the header

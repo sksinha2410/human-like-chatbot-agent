@@ -8,7 +8,7 @@ Follow these steps to enable GitHub Pages for your repository:
 
 ### 1. Navigate to Repository Settings
 
-1. Go to your repository on GitHub: `https://github.com/sksinha2410/human-like-chatbot-agent`
+1. Go to your repository on GitHub: `https://github.com/YOUR_USERNAME/human-like-chatbot-agent`
 2. Click on **Settings** (tab at the top)
 
 ### 2. Configure GitHub Pages
@@ -24,13 +24,13 @@ Follow these steps to enable GitHub Pages for your repository:
 
 1. GitHub will automatically build and deploy your site
 2. This usually takes 1-2 minutes
-3. Once deployed, you'll see a message like: "Your site is published at https://sksinha2410.github.io/human-like-chatbot-agent/"
+3. Once deployed, you'll see a message like: "Your site is published at https://YOUR_USERNAME.github.io/human-like-chatbot-agent/"
 
 ### 4. Visit Your Site
 
 Your GitHub Pages site will be available at:
 ```
-https://sksinha2410.github.io/human-like-chatbot-agent/
+https://YOUR_USERNAME.github.io/human-like-chatbot-agent/
 ```
 
 ## Using the Frontend
@@ -122,7 +122,7 @@ To use a custom domain with GitHub Pages:
 
 1. In repository **Settings** → **Pages**
 2. Under **Custom domain**, enter your domain (e.g., `chatbot.example.com`)
-3. Add a CNAME record in your DNS settings pointing to `sksinha2410.github.io`
+3. Add a CNAME record in your DNS settings pointing to `YOUR_USERNAME.github.io`
 4. Wait for DNS propagation (up to 24 hours)
 5. Enable **Enforce HTTPS** once DNS is configured
 

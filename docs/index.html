@@ -355,7 +355,7 @@
         function saveApiUrl() {
             const url = apiUrlInput.value.trim();
             if (!url) {
-                alert('Please enter a valid API URL');
+                addErrorMessage('Please enter a valid API URL');
                 return;
             }
             
