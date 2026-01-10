@@ -10,7 +10,7 @@ class MemoryService {
     let profile = await collection.findOne({ userId });
 
     if (!profile) {
-      profile = {
+      const newProfile: UserProfile = {
         userId,
         preferences: {},
         interests: [],
@@ -19,10 +19,11 @@ class MemoryService {
         createdAt: new Date(),
         updatedAt: new Date(),
       };
-      await collection.insertOne(profile);
+      await collection.insertOne(newProfile);
+      profile = await collection.findOne({ userId });
     }
 
-    return profile;
+    return profile!;
   }
 
   /**
