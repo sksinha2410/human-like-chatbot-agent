@@ -15,10 +15,8 @@ Follow these steps to enable GitHub Pages for your repository:
 
 1. In the left sidebar, click on **Pages** (under "Code and automation")
 2. Under **Source**, select:
-   - **Source**: Deploy from a branch
-   - **Branch**: Select your main branch (e.g., `main` or `master`)
-   - **Folder**: Select `/docs`
-3. Click **Save**
+   - **Source**: GitHub Actions
+3. The repository includes a GitHub Actions workflow (`.github/workflows/pages.yml`) that automatically deploys the `/docs` folder to GitHub Pages when you push to the main branch
 
 ### 3. Wait for Deployment
 
