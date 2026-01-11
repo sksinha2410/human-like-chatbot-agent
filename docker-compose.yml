@@ -1,6 +1,22 @@
 version: '3.8'
 
 services:
+  mongodb:
+    image: mongo:7.0
+    container_name: chatbot-mongodb
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data:/data/db
+    environment:
+      - MONGO_INITDB_DATABASE=chatbot
+    restart: unless-stopped
+    healthcheck:
+      test: echo 'db.runCommand("ping").ok' | mongosh localhost:27017/chatbot --quiet
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
   chatbot:
     build: .
     container_name: chatbot-api
@@ -8,10 +24,17 @@ services:
       - "3000:3000"
     environment:
       - GEMINI_API_KEY=${GEMINI_API_KEY}
+      - MONGODB_URI=mongodb://mongodb:27017/chatbot
       - PORT=3000
       - NODE_ENV=production
       - CHATBOT_NAME=Alex
       - CHATBOT_AGE=25
       - CHATBOT_LOCATION=San Francisco
       - CHATBOT_INTERESTS=technology,music,travel,philosophy
+    depends_on:
+      mongodb:
+        condition: service_healthy
     restart: unless-stopped
+
+volumes:
+  mongodb_data:
