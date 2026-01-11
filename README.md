@@ -2,7 +2,8 @@
 
 A sophisticated conversational AI chatbot with empathy, contextual awareness, long-term memory, and human-like personality. Built with Google Gemini API and Node.js/TypeScript.
 
-**🌐 Live Demo**: [Try it on GitHub Pages](https://sksinha2410.github.io/human-like-chatbot-agent/)
+**🌐 Live Demo**: [Try it on GitHub Pages](https://sksinha2410.github.io/human-like-chatbot-agent/)  
+⚠️ **Important**: To use the live demo, you must configure the API endpoint URL in the Settings panel (click ⚙️ icon)
 
 ## 🌟 Features
 
@@ -250,13 +251,20 @@ The chatbot UI is available as a static website on GitHub Pages:
 
 **📖 Setup Guide**: See [GITHUB_PAGES_SETUP.md](GITHUB_PAGES_SETUP.md) for detailed instructions on enabling GitHub Pages and connecting to your backend.
 
-To use it:
-1. Visit the GitHub Pages URL
-2. Click the ⚙️ Settings button
-3. Enter your deployed backend API URL
-4. Start chatting!
+#### How to Use the GitHub Pages Frontend
 
-**Note**: GitHub Pages only hosts the frontend. You still need to deploy the backend API separately (see options below).
+**Important**: GitHub Pages only hosts the frontend. You need to configure an API endpoint URL to make it work.
+
+To use the live demo:
+1. **Visit the GitHub Pages URL**: [https://sksinha2410.github.io/human-like-chatbot-agent/](https://sksinha2410.github.io/human-like-chatbot-agent/)
+2. **Click the ⚙️ Settings button** in the top-right corner
+3. **Enter your backend API endpoint URL**:
+   - For **local development**: `http://localhost:3000` (requires running the backend locally)
+   - For **production**: Your deployed backend URL (e.g., `https://your-app.onrender.com`)
+4. **Click "Save & Connect"**
+5. **Start chatting!**
+
+**Note**: Without configuring the API endpoint URL, the chatbot will not work. You must deploy the backend API separately (see deployment options below).
 
 ### Deploy Backend to Render
 
