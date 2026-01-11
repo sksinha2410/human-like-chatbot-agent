@@ -19,8 +19,8 @@ This is the GitHub Pages hosted frontend for the Human-Like Chatbot Agent.
 The chatbot requires a backend server to function. You can deploy the backend using:
 
 - **Render**: Free tier available, easy deployment from GitHub
-- **Railway**: Simple deployment with MongoDB plugin
-- **Heroku**: Classic PaaS option
+- **Railway**: Simple deployment with auto-scaling
+- **Vercel**: Serverless deployment option
 - **AWS/GCP/Azure**: For production workloads
 
 See the main [README](../README.md) for detailed deployment instructions.

@@ -5,7 +5,6 @@ Comprehensive guide for testing the Human-Like Chatbot Agent against all validat
 ## Prerequisites
 
 - Server running on `http://localhost:3000`
-- MongoDB running
 - Valid Gemini API key configured
 
 ## Quick Start
@@ -423,26 +422,15 @@ curl -X POST http://localhost:3000/api/chat \
   }'
 ```
 
-## Database Verification
+## Data Verification
 
-Check if data is being stored:
+The application uses in-memory storage. To verify data is being stored during a session:
 
-```bash
-# Connect to MongoDB
-mongosh
+1. Send multiple chat messages
+2. Reference earlier information in later messages
+3. Check server console logs for memory operations
 
-# Switch to database
-use chatbot
-
-# Check user profiles
-db.userProfiles.find().pretty()
-
-# Check chat sessions
-db.chatSessions.find().pretty()
-
-# Check specific user
-db.userProfiles.findOne({ userId: "test-user-123" })
-```
+**Note**: Data is not persisted between server restarts.
 
 ## Performance Testing
 
@@ -476,9 +464,6 @@ lsof -i :3000
 
 # Kill process if needed
 kill -9 <PID>
-
-# Check MongoDB is running
-mongosh --eval "db.adminCommand('ping')"
 ```
 
 ### Tests Failing
@@ -489,12 +474,7 @@ mongosh --eval "db.adminCommand('ping')"
    ```
    Ensure GEMINI_API_KEY is set
 
-2. **Check MongoDB Connection**
-   ```bash
-   mongosh $MONGODB_URI
-   ```
-
-3. **Check Logs**
+2. **Check Logs**
    ```bash
    # Server logs will show errors
    npm run dev
