@@ -1,7 +1,7 @@
 # Deployment Issues - Resolution Summary
 
 ## Problem Statement
-Unable to deploy on Render and use API key AIzaSyDGRICYGft0rEgXLnMjqkF01QWKf6q3bnk, and fix hosting issue.
+Unable to deploy on Render and use API key (format: AIzaSyXXXXXXXXXXXXXXXXXXXXXXXXXXXX), and fix hosting issue.
 
 ## Issues Identified
 
@@ -39,7 +39,7 @@ Unable to deploy on Render and use API key AIzaSyDGRICYGft0rEgXLnMjqkF01QWKf6q3b
 **Before:** Generic placeholder
 **After:** Added:
 - Comment with link to get API key
-- Example API key format: `AIzaSyDGRICYGft0rEgXLnMjqkF01QWKf6q3bnk`
+- Example API key format: `AIzaSyXXXXXXXXXXXXXXXXXXXXXXXXXXXX`
 - Clear indication this is an example
 
 ### 4. Enhanced `DEPLOYMENT.md` ✅

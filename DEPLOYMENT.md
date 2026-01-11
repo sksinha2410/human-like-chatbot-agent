@@ -29,7 +29,7 @@ This repository includes a `render.yaml` file for easy deployment on Render with
    
    **Required:**
    - `GEMINI_API_KEY` - Your Google Gemini API key (get from https://aistudio.google.com/app/apikey)
-     - Example format: `AIzaSyDGRICYGft0rEgXLnMjqkF01QWKf6q3bnk`
+     - Example format: `AIzaSyXXXXXXXXXXXXXXXXXXXXXXXXXXXX`
    - `MONGODB_URI` - Will be automatically provided by Render's MongoDB service
    
    **Optional (already set with defaults):**
@@ -52,10 +52,6 @@ This repository includes a `render.yaml` file for easy deployment on Render with
    - Copy your Render URL to use in the GitHub Pages frontend
    - Go to [GitHub Pages frontend](https://sksinha2410.github.io/human-like-chatbot-agent/)
    - Click ⚙️ Settings and enter your Render URL
-
-### Method 2: Manual Setup (Alternative)
-
-If you prefer to set up manually without the Blueprint:
 
 ### Method 2: Manual Setup (Alternative)
 
@@ -106,7 +102,7 @@ If you prefer to set up manually without the Blueprint:
 - **API Key Security**:
   - NEVER commit your `.env` file or actual API keys to GitHub
   - Always set API keys through Render's environment variables dashboard
-  - The example API key format is: `AIzaSyDGRICYGft0rEgXLnMjqkF01QWKf6q3bnk`
+  - The example API key format is: `AIzaSyXXXXXXXXXXXXXXXXXXXXXXXXXXXX`
 
 ## Option 2: Railway
 
