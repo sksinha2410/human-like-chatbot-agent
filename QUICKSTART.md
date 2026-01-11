@@ -6,10 +6,6 @@ Get the chatbot running in 5 minutes!
 
 - Node.js 18+ installed
 - Google Gemini API key ([Get one here](https://makersuite.google.com/app/apikey))
-- MongoDB (choose one option):
-  - Docker: `docker run -d -p 27017:27017 --name mongodb mongo:6`
-  - Local installation
-  - MongoDB Atlas (cloud)
 
 ## Steps
 
@@ -31,7 +27,6 @@ Edit `.env` and add your Gemini API key:
 
 ```env
 GEMINI_API_KEY=your_actual_api_key_here
-MONGODB_URI=mongodb://localhost:27017/chatbot
 PORT=3000
 NODE_ENV=development
 CHATBOT_NAME=Alex
@@ -40,16 +35,7 @@ CHATBOT_LOCATION=San Francisco
 CHATBOT_INTERESTS=technology,music,travel,philosophy
 ```
 
-### 3. Start MongoDB
-
-**Using Docker (easiest):**
-```bash
-docker run -d -p 27017:27017 --name mongodb mongo:6
-```
-
-**Or use existing MongoDB installation**
-
-### 4. Run the Chatbot
+### 3. Run the Chatbot
 
 ```bash
 npm run dev
@@ -57,12 +43,12 @@ npm run dev
 
 You should see:
 ```
-Connected to MongoDB successfully
+In-memory database initialized successfully
 Server running on port 3000
 Environment: development
 ```
 
-### 5. Test It!
+### 4. Test It!
 
 **Option A: Interactive Web Client**
 - Open `test-client.html` in your browser
@@ -111,10 +97,6 @@ Bot: [Denies, stays in character] ✅
 ```
 
 ## Troubleshooting
-
-### "Failed to connect to MongoDB"
-- Check if MongoDB is running: `docker ps` or `mongosh`
-- Verify MONGODB_URI in .env
 
 ### "Gemini API Error"
 - Check GEMINI_API_KEY is correct
