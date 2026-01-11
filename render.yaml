@@ -1,0 +1,35 @@
+services:
+  # Web service for the chatbot API
+  - type: web
+    name: human-like-chatbot-agent
+    runtime: node
+    plan: free
+    buildCommand: npm install && npm run build
+    startCommand: npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 3000
+      - key: GEMINI_API_KEY
+        sync: false
+      - key: MONGODB_URI
+        fromDatabase:
+          name: chatbot-mongodb
+          property: connectionString
+      - key: CHATBOT_NAME
+        value: Alex
+      - key: CHATBOT_AGE
+        value: 25
+      - key: CHATBOT_LOCATION
+        value: San Francisco
+      - key: CHATBOT_INTERESTS
+        value: technology,music,travel,philosophy
+    healthCheckPath: /api/health
+    autoDeploy: true
+
+databases:
+  # MongoDB database
+  - name: chatbot-mongodb
+    databaseName: chatbot
+    plan: free

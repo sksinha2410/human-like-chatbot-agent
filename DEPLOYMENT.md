@@ -9,11 +9,58 @@ This guide covers various deployment options for the Human-Like Chatbot Agent.
 
 ## Option 1: Render (Recommended for Quick Deploy)
 
-### Steps:
+### Method 1: Using render.yaml (Recommended)
+
+This repository includes a `render.yaml` file for easy deployment on Render with Infrastructure as Code.
 
 1. **Create a Render Account**
    - Go to [render.com](https://render.com)
    - Sign up with GitHub
+
+2. **Deploy from Dashboard**
+   - Click "New +" → "Blueprint"
+   - Connect your GitHub repository (`sksinha2410/human-like-chatbot-agent`)
+   - Render will automatically detect the `render.yaml` file
+   - Click "Apply"
+
+3. **Set Required Environment Variables**
+   
+   In the Render dashboard, you'll need to set these environment variables:
+   
+   **Required:**
+   - `GEMINI_API_KEY` - Your Google Gemini API key (get from https://aistudio.google.com/app/apikey)
+     - Example format: `AIzaSyXXXXXXXXXXXXXXXXXXXXXXXXXXXX`
+   - `MONGODB_URI` - Will be automatically provided by Render's MongoDB service
+   
+   **Optional (already set with defaults):**
+   - `CHATBOT_NAME` - Bot's name (default: Alex)
+   - `CHATBOT_AGE` - Bot's age (default: 25)
+   - `CHATBOT_LOCATION` - Bot's location (default: San Francisco)
+   - `CHATBOT_INTERESTS` - Comma-separated interests
+
+4. **Deployment**
+   - Render will automatically:
+     - Create a MongoDB database
+     - Build your application (`npm install && npm run build`)
+     - Start the server (`npm start`)
+     - Set up health checks at `/api/health`
+   - Wait 5-10 minutes for initial deployment
+   - Your app will be live at `https://your-app.onrender.com`
+
+5. **Post-Deployment**
+   - Test the API: `https://your-app.onrender.com/api/health`
+   - Copy your Render URL to use in the GitHub Pages frontend
+   - Go to [GitHub Pages frontend](https://sksinha2410.github.io/human-like-chatbot-agent/)
+   - Click ⚙️ Settings and enter your Render URL
+
+### Method 2: Manual Setup (Alternative)
+
+If you prefer to set up manually without the Blueprint:
+
+1. **Create a MongoDB Database First**
+   - In Render dashboard, click "New +" → "MongoDB"
+   - Choose free tier
+   - Note down the Internal Connection String
 
 2. **Create a Web Service**
    - Click "New +" → "Web Service"
@@ -27,6 +74,7 @@ This guide covers various deployment options for the Human-Like Chatbot Agent.
 3. **Set Environment Variables**
    ```
    GEMINI_API_KEY=your_key_here
+   MONGODB_URI=<Internal Connection String from MongoDB service>
    PORT=3000
    NODE_ENV=production
    CHATBOT_NAME=Alex
@@ -39,6 +87,22 @@ This guide covers various deployment options for the Human-Like Chatbot Agent.
    - Click "Create Web Service"
    - Wait for deployment
    - Your app will be live at `https://your-app.onrender.com`
+
+### Important Notes for Render Deployment
+
+- **Free Tier Limitations**: 
+  - Services spin down after 15 minutes of inactivity
+  - First request after inactivity may take 30-60 seconds (cold start)
+  - 750 hours/month free for web services
+  
+- **MongoDB Connection**: 
+  - Use the Internal Connection String (not External) for best performance
+  - Example format: `mongodb://mongo:27017/chatbot`
+  
+- **API Key Security**:
+  - NEVER commit your `.env` file or actual API keys to GitHub
+  - Always set API keys through Render's environment variables dashboard
+  - The example API key format is: `AIzaSyXXXXXXXXXXXXXXXXXXXXXXXXXXXX`
 
 ## Option 2: Railway
 
