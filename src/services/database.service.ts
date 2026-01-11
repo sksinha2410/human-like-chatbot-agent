@@ -1,86 +1,60 @@
+import { MongoClient, Db, Collection } from 'mongodb';
+import { config } from '../config';
 import { UserProfile, ChatSession } from '../types';
 
 /**
- * In-memory database service - stores data in memory without external database
+ * MongoDB database service - stores data in MongoDB
  */
 class DatabaseService {
-  private userProfiles: Map<string, UserProfile> = new Map();
-  private chatSessions: Map<string, ChatSession> = new Map();
+  private client: MongoClient | null = null;
+  private db: Db | null = null;
   private isConnected: boolean = false;
 
   constructor() {
-    // Initialize in-memory storage
+    // MongoDB client will be initialized on connect
   }
 
   async connect(): Promise<void> {
-    // No external connection needed for in-memory storage
-    this.isConnected = true;
-    console.log('In-memory database initialized successfully');
+    try {
+      const mongoUri = config.mongodb.uri;
+      
+      // Create MongoDB client
+      this.client = new MongoClient(mongoUri);
+      
+      // Connect to MongoDB
+      await this.client.connect();
+      
+      // Get database instance
+      this.db = this.client.db(config.mongodb.dbName);
+      
+      this.isConnected = true;
+      console.log('MongoDB connected successfully');
+    } catch (error) {
+      console.error('Failed to connect to MongoDB:', error);
+      throw error;
+    }
   }
 
   async disconnect(): Promise<void> {
-    // Clear in-memory data on disconnect
-    this.userProfiles.clear();
-    this.chatSessions.clear();
-    this.isConnected = false;
-    console.log('In-memory database cleared');
+    if (this.client) {
+      await this.client.close();
+      this.isConnected = false;
+      console.log('MongoDB disconnected');
+    }
   }
 
-  getUserProfilesCollection() {
-    if (!this.isConnected) {
+  getUserProfilesCollection(): Collection<UserProfile> {
+    if (!this.isConnected || !this.db) {
       throw new Error('Database not connected');
     }
-    return {
-      findOne: async (query: { userId: string }): Promise<UserProfile | null> => {
-        return this.userProfiles.get(query.userId) || null;
-      },
-      insertOne: async (profile: UserProfile): Promise<void> => {
-        this.userProfiles.set(profile.userId, profile);
-      },
-      updateOne: async (
-        query: { userId: string },
-        update: { $set?: Partial<UserProfile>; $push?: any }
-      ): Promise<void> => {
-        const profile = this.userProfiles.get(query.userId);
-        if (profile) {
-          if (update.$set) {
-            Object.assign(profile, update.$set);
-          }
-          if (update.$push) {
-            Object.entries(update.$push).forEach(([key, value]) => {
-              if (Array.isArray(profile[key as keyof UserProfile])) {
-                (profile[key as keyof UserProfile] as any[]).push(value);
-              }
-            });
-          }
-          this.userProfiles.set(query.userId, profile);
-        }
-      },
-    };
+    return this.db.collection<UserProfile>('userProfiles');
   }
 
-  getChatSessionsCollection() {
-    if (!this.isConnected) {
+  getChatSessionsCollection(): Collection<ChatSession> {
+    if (!this.isConnected || !this.db) {
       throw new Error('Database not connected');
     }
-    return {
-      findOne: async (query: { sessionId: string }): Promise<ChatSession | null> => {
-        return this.chatSessions.get(query.sessionId) || null;
-      },
-      insertOne: async (session: ChatSession): Promise<void> => {
-        this.chatSessions.set(session.sessionId, session);
-      },
-      updateOne: async (
-        query: { sessionId: string },
-        update: { $set?: Partial<ChatSession> }
-      ): Promise<void> => {
-        const session = this.chatSessions.get(query.sessionId);
-        if (session && update.$set) {
-          Object.assign(session, update.$set);
-          this.chatSessions.set(query.sessionId, session);
-        }
-      },
-    };
+    return this.db.collection<ChatSession>('chatSessions');
   }
 }
 
