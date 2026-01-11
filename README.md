@@ -5,6 +5,8 @@ A sophisticated conversational AI chatbot with empathy, contextual awareness, lo
 **🌐 Live Demo**: [Try it on GitHub Pages](https://sksinha2410.github.io/human-like-chatbot-agent/)  
 ⚠️ **Important**: To use the live demo, you must configure the API endpoint URL in the Settings panel (click ⚙️ icon)
 
+**🚀 Quick Deploy**: [Deploy to Render in 5 minutes](RENDER_DEPLOYMENT.md) - Easy one-click deployment!
+
 ## 🌟 Features
 
 - **Human-Like Interaction**: Natural, emotionally engaging conversations with authentic responses
@@ -249,6 +251,26 @@ Bot: I'm Alex!
 ```
 
 ## 📦 Deployment
+
+### Quick Deploy to Render (Recommended) 🚀
+
+The fastest way to deploy this chatbot:
+
+1. **One-Click Deploy**: Use the included `render.yaml` Blueprint
+2. **Set API Key**: Add your Google Gemini API key
+3. **Go Live**: Your chatbot API will be running in 5-10 minutes
+
+**📖 Full Guide**: See [RENDER_DEPLOYMENT.md](RENDER_DEPLOYMENT.md) for step-by-step instructions.
+
+### Other Deployment Options
+
+For detailed deployment instructions on other platforms, see [DEPLOYMENT.md](DEPLOYMENT.md):
+- Render (with Blueprint or Manual setup)
+- Railway
+- Vercel
+- Docker (self-hosted)
+- AWS EC2
+- DigitalOcean
 
 ### GitHub Pages (Frontend Only)
 
