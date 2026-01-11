@@ -13,14 +13,9 @@ class DatabaseService {
   }
 
   async connect(): Promise<void> {
-    try {
-      // No external connection needed for in-memory storage
-      this.isConnected = true;
-      console.log('In-memory database initialized successfully');
-    } catch (error) {
-      console.error('Database initialization error:', error);
-      throw error;
-    }
+    // No external connection needed for in-memory storage
+    this.isConnected = true;
+    console.log('In-memory database initialized successfully');
   }
 
   async disconnect(): Promise<void> {
