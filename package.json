@@ -7,7 +7,8 @@
     "dev": "ts-node-dev --respawn --transpile-only src/index.ts",
     "build": "tsc",
     "start": "node dist/index.js",
-    "deploy": "gh-pages -d dist",
+    "deploy": "npm run build && npm start",
+    "deploy:pages": "gh-pages -d docs",
     "test": "jest --coverage",
     "test:watch": "jest --watch",
     "lint": "eslint src --ext .ts"

@@ -31,6 +31,18 @@ class DatabaseService {
       console.log('MongoDB connected successfully');
     } catch (error) {
       console.error('Failed to connect to MongoDB:', error);
+      
+      // Clean up client if connection failed
+      if (this.client) {
+        try {
+          await this.client.close();
+        } catch (closeError) {
+          // Ignore errors when closing
+        }
+        this.client = null;
+        this.db = null;
+      }
+      
       throw error;
     }
   }
@@ -38,6 +50,8 @@ class DatabaseService {
   async disconnect(): Promise<void> {
     if (this.client) {
       await this.client.close();
+      this.client = null;
+      this.db = null;
       this.isConnected = false;
       console.log('MongoDB disconnected');
     }
