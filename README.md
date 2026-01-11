@@ -103,6 +103,9 @@ Edit `.env` with your configuration:
 # Gemini API Configuration
 GEMINI_API_KEY=your_actual_gemini_api_key_here
 
+# MongoDB Configuration
+MONGODB_URI=mongodb://localhost:27017/chatbot
+
 # Server Configuration
 PORT=3000
 NODE_ENV=development
@@ -113,6 +116,10 @@ CHATBOT_AGE=25
 CHATBOT_LOCATION=San Francisco
 CHATBOT_INTERESTS=technology,music,travel,philosophy
 ```
+
+**Required Environment Variables:**
+- `GEMINI_API_KEY` - Your Google Gemini API key (required)
+- `MONGODB_URI` - MongoDB connection string (required)
 
 ### 4. Build and Run
 

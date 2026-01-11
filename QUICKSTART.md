@@ -23,10 +23,11 @@ npm install
 cp .env.example .env
 ```
 
-Edit `.env` and add your Gemini API key:
+Edit `.env` and add your Gemini API key and MongoDB URI:
 
 ```env
 GEMINI_API_KEY=your_actual_api_key_here
+MONGODB_URI=mongodb://localhost:27017/chatbot
 PORT=3000
 NODE_ENV=development
 CHATBOT_NAME=Alex
@@ -98,10 +99,20 @@ Bot: [Denies, stays in character] ✅
 
 ## Troubleshooting
 
+### "Configuration Error: Missing required configuration"
+- Ensure both `GEMINI_API_KEY` and `MONGODB_URI` are set in your `.env` file
+- Check that the values are not empty or whitespace only
+- Refer to `.env.example` for the correct format
+
 ### "Gemini API Error"
 - Check GEMINI_API_KEY is correct
 - Verify billing is enabled in Google Cloud
 - Check API quota
+
+### "MongoDB Connection Error"
+- Verify MONGODB_URI is correct
+- Ensure MongoDB is running (if using local instance)
+- Check network connectivity to MongoDB server
 
 ### "Port 3000 already in use"
 - Change PORT in .env to 3001 or another available port
