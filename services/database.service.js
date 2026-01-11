@@ -1,46 +1,76 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.databaseService = void 0;
-const mongodb_1 = require("mongodb");
-const config_1 = require("../config");
+/**
+ * In-memory database service - stores data in memory without external database
+ */
 class DatabaseService {
     constructor() {
-        this.db = null;
-        this.userProfilesCollection = null;
-        this.chatSessionsCollection = null;
-        this.client = new mongodb_1.MongoClient(config_1.config.mongodb.uri);
+        this.userProfiles = new Map();
+        this.chatSessions = new Map();
+        this.isConnected = false;
+        // Initialize in-memory storage
     }
     async connect() {
-        try {
-            await this.client.connect();
-            this.db = this.client.db();
-            this.userProfilesCollection = this.db.collection('userProfiles');
-            this.chatSessionsCollection = this.db.collection('chatSessions');
-            // Create indexes for better performance
-            await this.userProfilesCollection.createIndex({ userId: 1 }, { unique: true });
-            await this.chatSessionsCollection.createIndex({ sessionId: 1 }, { unique: true });
-            await this.chatSessionsCollection.createIndex({ userId: 1 });
-            console.log('Connected to MongoDB successfully');
-        }
-        catch (error) {
-            console.error('MongoDB connection error:', error);
-            throw error;
-        }
+        // No external connection needed for in-memory storage
+        this.isConnected = true;
+        console.log('In-memory database initialized successfully');
     }
     async disconnect() {
-        await this.client.close();
+        // Clear in-memory data on disconnect
+        this.userProfiles.clear();
+        this.chatSessions.clear();
+        this.isConnected = false;
+        console.log('In-memory database cleared');
     }
     getUserProfilesCollection() {
-        if (!this.userProfilesCollection) {
+        if (!this.isConnected) {
             throw new Error('Database not connected');
         }
-        return this.userProfilesCollection;
+        return {
+            findOne: async (query) => {
+                return this.userProfiles.get(query.userId) || null;
+            },
+            insertOne: async (profile) => {
+                this.userProfiles.set(profile.userId, profile);
+            },
+            updateOne: async (query, update) => {
+                const profile = this.userProfiles.get(query.userId);
+                if (profile) {
+                    if (update.$set) {
+                        Object.assign(profile, update.$set);
+                    }
+                    if (update.$push) {
+                        Object.entries(update.$push).forEach(([key, value]) => {
+                            if (Array.isArray(profile[key])) {
+                                profile[key].push(value);
+                            }
+                        });
+                    }
+                    this.userProfiles.set(query.userId, profile);
+                }
+            },
+        };
     }
     getChatSessionsCollection() {
-        if (!this.chatSessionsCollection) {
+        if (!this.isConnected) {
             throw new Error('Database not connected');
         }
-        return this.chatSessionsCollection;
+        return {
+            findOne: async (query) => {
+                return this.chatSessions.get(query.sessionId) || null;
+            },
+            insertOne: async (session) => {
+                this.chatSessions.set(session.sessionId, session);
+            },
+            updateOne: async (query, update) => {
+                const session = this.chatSessions.get(query.sessionId);
+                if (session && update.$set) {
+                    Object.assign(session, update.$set);
+                    this.chatSessions.set(query.sessionId, session);
+                }
+            },
+        };
     }
 }
 exports.databaseService = new DatabaseService();

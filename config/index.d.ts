@@ -3,9 +3,6 @@ export declare const config: {
         apiKey: string;
         model: string;
     };
-    mongodb: {
-        uri: string;
-    };
     server: {
         port: number;
         env: string;
