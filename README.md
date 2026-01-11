@@ -1,6 +1,6 @@
 # Human-Like Chatbot Agent 🤖💬
 
-A sophisticated conversational AI chatbot with empathy, contextual awareness, long-term memory, and human-like personality. Built with Google Gemini API, MongoDB, and Node.js/TypeScript.
+A sophisticated conversational AI chatbot with empathy, contextual awareness, long-term memory, and human-like personality. Built with Google Gemini API and Node.js/TypeScript.
 
 **🌐 Live Demo**: [Try it on GitHub Pages](https://sksinha2410.github.io/human-like-chatbot-agent/)
 
@@ -43,7 +43,7 @@ A sophisticated conversational AI chatbot with empathy, contextual awareness, lo
          └──────────┬──────────┘
                     │
            ┌────────▼────────┐
-           │   MongoDB       │
+           │  In-Memory Store│
            │                 │
            │ - User Profiles │
            │ - Chat Sessions │
@@ -55,7 +55,7 @@ A sophisticated conversational AI chatbot with empathy, contextual awareness, lo
 
 1. **Memory Strategy**: Two-tier memory system
    - **Short-term**: Session-based conversation context (last 10 messages)
-   - **Long-term**: Persistent user profiles in MongoDB with extracted information
+   - **Long-term**: In-memory user profiles with extracted information
 
 2. **Tone Adaptation**: Real-time sentiment analysis to detect emotional state and adjust responses accordingly
 
@@ -66,12 +66,11 @@ A sophisticated conversational AI chatbot with empathy, contextual awareness, lo
 5. **Cost Efficiency**: 
    - Session-based context window limiting (10 messages)
    - Efficient prompt engineering
-   - MongoDB for cost-effective persistent storage
+   - In-memory storage for fast access and no database costs
 
 ## 📋 Requirements
 
 - Node.js 18+ 
-- MongoDB 6.0+
 - Google Gemini API key
 
 ## 🚀 Setup Instructions
@@ -103,9 +102,6 @@ Edit `.env` with your configuration:
 # Gemini API Configuration
 GEMINI_API_KEY=your_actual_gemini_api_key_here
 
-# MongoDB Configuration
-MONGODB_URI=mongodb://localhost:27017/chatbot
-
 # Server Configuration
 PORT=3000
 NODE_ENV=development
@@ -117,19 +113,7 @@ CHATBOT_LOCATION=San Francisco
 CHATBOT_INTERESTS=technology,music,travel,philosophy
 ```
 
-### 4. Start MongoDB
-
-Make sure MongoDB is running:
-
-```bash
-# Using Docker (recommended)
-docker run -d -p 27017:27017 --name mongodb mongo:6
-
-# Or if installed locally
-mongod
-```
-
-### 5. Build and Run
+### 4. Build and Run
 
 ```bash
 # Development mode with auto-reload
@@ -142,7 +126,7 @@ npm start
 
 The server will start on `http://localhost:3000`
 
-### 6. Test the Frontend (Optional)
+### 5. Test the Frontend (Optional)
 
 Open `test-client.html` in your browser to interact with the chatbot locally, or visit the [GitHub Pages frontend](https://sksinha2410.github.io/human-like-chatbot-agent/) and configure it to use `http://localhost:3000`.
 
@@ -403,15 +387,6 @@ const Chatbot = () => {
 
 ## 🐛 Troubleshooting
 
-### MongoDB Connection Error
-```bash
-# Check if MongoDB is running
-docker ps | grep mongo
-
-# Or restart MongoDB
-docker restart mongodb
-```
-
 ### Gemini API Error
 - Verify API key in `.env`
 - Check API quotas and billing
@@ -422,6 +397,12 @@ docker restart mongodb
 # Change PORT in .env
 PORT=3001
 ```
+
+### Memory Persistence
+**Note**: This application uses in-memory storage, which means:
+- All data (user profiles, chat sessions) is stored in RAM
+- Data is lost when the server restarts
+- For production use, consider adding a persistent storage solution if needed
 
 ## 📄 License
 
@@ -434,5 +415,4 @@ Created for Conversational AI / Full-Stack / Applied NLP submission
 ## 🙏 Acknowledgments
 
 - Google Gemini API for powerful language generation
-- MongoDB for flexible data storage
 - Express.js for robust API framework

@@ -6,7 +6,6 @@ This guide covers various deployment options for the Human-Like Chatbot Agent.
 
 - GitHub repository
 - Google Gemini API key
-- MongoDB database (or MongoDB Atlas)
 
 ## Option 1: Render (Recommended for Quick Deploy)
 
@@ -25,17 +24,9 @@ This guide covers various deployment options for the Human-Like Chatbot Agent.
      - **Build Command**: `npm install && npm run build`
      - **Start Command**: `npm start`
 
-3. **Add MongoDB**
-   - In Render dashboard, create a new "Background Worker" or use MongoDB Atlas
-   - For MongoDB Atlas:
-     - Go to [mongodb.com/cloud/atlas](https://www.mongodb.com/cloud/atlas)
-     - Create a free cluster
-     - Get connection string
-
-4. **Set Environment Variables**
+3. **Set Environment Variables**
    ```
    GEMINI_API_KEY=your_key_here
-   MONGODB_URI=your_mongodb_connection_string
    PORT=3000
    NODE_ENV=production
    CHATBOT_NAME=Alex
@@ -44,7 +35,7 @@ This guide covers various deployment options for the Human-Like Chatbot Agent.
    CHATBOT_INTERESTS=technology,music,travel,philosophy
    ```
 
-5. **Deploy**
+4. **Deploy**
    - Click "Create Web Service"
    - Wait for deployment
    - Your app will be live at `https://your-app.onrender.com`
@@ -69,12 +60,7 @@ This guide covers various deployment options for the Human-Like Chatbot Agent.
    railway init
    ```
 
-4. **Add MongoDB Plugin**
-   ```bash
-   railway add mongodb
-   ```
-
-5. **Set Environment Variables**
+4. **Set Environment Variables**
    ```bash
    railway variables set GEMINI_API_KEY=your_key_here
    railway variables set CHATBOT_NAME=Alex
@@ -83,12 +69,12 @@ This guide covers various deployment options for the Human-Like Chatbot Agent.
    railway variables set CHATBOT_INTERESTS=technology,music,travel,philosophy
    ```
 
-6. **Deploy**
+5. **Deploy**
    ```bash
    railway up
    ```
 
-7. **Get URL**
+6. **Get URL**
    ```bash
    railway open
    ```

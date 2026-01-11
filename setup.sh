@@ -53,25 +53,12 @@ else
     echo "✓ .env file exists"
 fi
 
-# Check MongoDB
-echo ""
-echo "Checking MongoDB..."
-if command -v mongod &> /dev/null; then
-    echo "✓ MongoDB is installed"
-else
-    echo "⚠️  MongoDB not found. You can:"
-    echo "   1. Install MongoDB locally: https://www.mongodb.com/docs/manual/installation/"
-    echo "   2. Use Docker: docker run -d -p 27017:27017 --name mongodb mongo:6"
-    echo "   3. Use MongoDB Atlas (cloud): https://www.mongodb.com/cloud/atlas"
-fi
-
 echo ""
 echo "✅ Setup complete!"
 echo ""
 echo "Next steps:"
 echo "1. Edit .env and add your GEMINI_API_KEY"
-echo "2. Start MongoDB (if not already running)"
-echo "3. Run: npm run dev"
-echo "4. Open test-client.html in your browser"
+echo "2. Run: npm run dev"
+echo "3. Open test-client.html in your browser"
 echo ""
 echo "For more information, see README.md"

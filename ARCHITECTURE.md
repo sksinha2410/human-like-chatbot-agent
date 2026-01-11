@@ -17,7 +17,7 @@ This document describes the architecture, design decisions, and implementation d
 ### Technology Stack
 - **Backend**: Node.js 18+ with TypeScript
 - **AI Model**: Google Gemini 2.0 Flash (gemini-2.0-flash-exp)
-- **Database**: MongoDB 6.0+
+- **Database**: In-Memory Storage
 - **Framework**: Express.js
 - **Memory**: Two-tier system (short-term + long-term)
 
@@ -57,7 +57,7 @@ This document describes the architecture, design decisions, and implementation d
                     │
            ┌────────▼────────┐
            │ Database Layer  │
-           │   (MongoDB)     │
+           │ (In-Memory)     │
            │                 │
            │ Collections:    │
            │ - userProfiles  │
@@ -141,8 +141,10 @@ detectTone(message: string): string {
 - Profession: "I work as", "I'm a"
 - Hobbies: detected from hobby-related keywords
 
-#### 5. Database Layer (MongoDB)
-**Purpose**: Persistent storage for user data and sessions
+#### 5. Database Layer (In-Memory Storage)
+**Purpose**: Fast, lightweight storage for user data and sessions
+
+**Note**: Data is stored in memory and is not persisted across server restarts. For production use with persistent requirements, consider adding a database layer.
 
 **Collections**:
 
@@ -206,14 +208,14 @@ detectTone(message: string): string {
 - **Retention**: Last 10 messages
 - **Purpose**: Immediate conversational context
 - **Update**: Real-time during conversation
-- **Cost**: Minimal MongoDB storage
+- **Cost**: Minimal in-memory storage
 
 #### Long-Term Memory (User Profile)
 - **Storage**: In userProfiles collection
-- **Retention**: Persistent across all sessions
+- **Retention**: Stored in memory (lost on server restart)
 - **Purpose**: User preferences, interests, personal details
 - **Update**: After each message via extraction patterns
-- **Cost**: One MongoDB document per user
+- **Cost**: One in-memory object per user
 
 ### Memory Flow
 
@@ -327,17 +329,16 @@ Return Response
 
 ### Horizontal Scaling
 - **Stateless Services**: Chatbot and Memory services are stateless
-- **Session Storage**: MongoDB handles session state
-- **Load Balancer**: Can distribute across multiple instances
-- **No In-Memory State**: Everything persists to database
+- **Session Storage**: In-memory storage (consider adding shared cache like Redis for multi-instance deployments)
+- **Load Balancer**: Can distribute across multiple instances with sticky sessions
+- **Note**: For multi-instance deployments, consider adding a shared storage solution
 
 ### Performance Optimizations
 
 1. **Context Window Limiting**: Only last 10 messages (reduces token cost)
-2. **Indexed Queries**: MongoDB indexes on userId and sessionId
+2. **In-Memory Access**: Fast read/write operations with no network overhead
 3. **Efficient Extraction**: Regex patterns instead of AI parsing
-4. **Connection Pooling**: MongoDB connection reuse
-5. **Async Operations**: Non-blocking I/O throughout
+4. **Async Operations**: Non-blocking I/O throughout
 
 ### Cost Efficiency
 
@@ -346,11 +347,11 @@ Return Response
 - Token limiting: ~500-1000 tokens per request
 - Estimated: $0.0001 per message
 
-**MongoDB Costs**:
-- Free tier: Atlas M0 (512MB) supports ~10,000 users
-- Paid: $0.08/GB/month
+**Storage Costs**:
+- In-memory storage: No database costs
+- RAM usage: ~1-5MB per active user session
 
-**Total Estimated Cost**: <$10/month for 100,000 messages
+**Total Estimated Cost**: <$5/month for 100,000 messages (Gemini API only)
 
 ## Security Considerations
 
@@ -361,10 +362,10 @@ Return Response
 - Input validation and sanitization
 
 ### Data Privacy
-- User data encrypted at rest (MongoDB encryption)
+- No persistent storage by default (data cleared on restart)
 - No PII in logs
 - User data isolated by userId
-- GDPR compliance ready (user deletion support)
+- Session-based data management
 
 ### Rate Limiting (Production Recommendation)
 ```typescript
@@ -426,7 +427,7 @@ Real-time bidirectional communication for faster interactions
 
 1. **Long-Term Memory Recall**: ✅ Passed
    - Remembers user name, preferences across sessions
-   - MongoDB persistence validated
+   - In-memory storage validated (note: data cleared on restart)
 
 2. **Context-Aware Tone Adaptation**: ✅ Passed
    - Detects emotional state
@@ -478,16 +479,17 @@ Real-time bidirectional communication for faster interactions
     └────┬───┘
          │
 ┌────────▼────────┐
-│ MongoDB Cluster │
-│  (Replica Set)  │
+│  Shared Cache   │
+│  (Redis/etc.)   │
+│  (Optional)     │
 └─────────────────┘
 ```
 
 ### Deployment Options
 
-1. **Vercel**: Serverless deployment (requires MongoDB Atlas)
+1. **Vercel**: Serverless deployment (lightweight, no database needed)
 2. **Render**: Container-based deployment
-3. **Railway**: Full-stack deployment with DB
+3. **Railway**: Simple deployment with auto-scaling
 4. **AWS ECS**: Production-grade containerized deployment
 5. **Docker**: Self-hosted with docker-compose
 

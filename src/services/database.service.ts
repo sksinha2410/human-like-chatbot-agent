@@ -1,52 +1,86 @@
-import { MongoClient, Db, Collection } from 'mongodb';
-import { config } from '../config';
 import { UserProfile, ChatSession } from '../types';
 
+/**
+ * In-memory database service - stores data in memory without external database
+ */
 class DatabaseService {
-  private client: MongoClient;
-  private db: Db | null = null;
-  private userProfilesCollection: Collection<UserProfile> | null = null;
-  private chatSessionsCollection: Collection<ChatSession> | null = null;
+  private userProfiles: Map<string, UserProfile> = new Map();
+  private chatSessions: Map<string, ChatSession> = new Map();
+  private isConnected: boolean = false;
 
   constructor() {
-    this.client = new MongoClient(config.mongodb.uri);
+    // Initialize in-memory storage
   }
 
   async connect(): Promise<void> {
-    try {
-      await this.client.connect();
-      this.db = this.client.db();
-      this.userProfilesCollection = this.db.collection<UserProfile>('userProfiles');
-      this.chatSessionsCollection = this.db.collection<ChatSession>('chatSessions');
-      
-      // Create indexes for better performance
-      await this.userProfilesCollection.createIndex({ userId: 1 }, { unique: true });
-      await this.chatSessionsCollection.createIndex({ sessionId: 1 }, { unique: true });
-      await this.chatSessionsCollection.createIndex({ userId: 1 });
-      
-      console.log('Connected to MongoDB successfully');
-    } catch (error) {
-      console.error('MongoDB connection error:', error);
-      throw error;
-    }
+    // No external connection needed for in-memory storage
+    this.isConnected = true;
+    console.log('In-memory database initialized successfully');
   }
 
   async disconnect(): Promise<void> {
-    await this.client.close();
+    // Clear in-memory data on disconnect
+    this.userProfiles.clear();
+    this.chatSessions.clear();
+    this.isConnected = false;
+    console.log('In-memory database cleared');
   }
 
-  getUserProfilesCollection(): Collection<UserProfile> {
-    if (!this.userProfilesCollection) {
+  getUserProfilesCollection() {
+    if (!this.isConnected) {
       throw new Error('Database not connected');
     }
-    return this.userProfilesCollection;
+    return {
+      findOne: async (query: { userId: string }): Promise<UserProfile | null> => {
+        return this.userProfiles.get(query.userId) || null;
+      },
+      insertOne: async (profile: UserProfile): Promise<void> => {
+        this.userProfiles.set(profile.userId, profile);
+      },
+      updateOne: async (
+        query: { userId: string },
+        update: { $set?: Partial<UserProfile>; $push?: any }
+      ): Promise<void> => {
+        const profile = this.userProfiles.get(query.userId);
+        if (profile) {
+          if (update.$set) {
+            Object.assign(profile, update.$set);
+          }
+          if (update.$push) {
+            Object.entries(update.$push).forEach(([key, value]) => {
+              if (Array.isArray(profile[key as keyof UserProfile])) {
+                (profile[key as keyof UserProfile] as any[]).push(value);
+              }
+            });
+          }
+          this.userProfiles.set(query.userId, profile);
+        }
+      },
+    };
   }
 
-  getChatSessionsCollection(): Collection<ChatSession> {
-    if (!this.chatSessionsCollection) {
+  getChatSessionsCollection() {
+    if (!this.isConnected) {
       throw new Error('Database not connected');
     }
-    return this.chatSessionsCollection;
+    return {
+      findOne: async (query: { sessionId: string }): Promise<ChatSession | null> => {
+        return this.chatSessions.get(query.sessionId) || null;
+      },
+      insertOne: async (session: ChatSession): Promise<void> => {
+        this.chatSessions.set(session.sessionId, session);
+      },
+      updateOne: async (
+        query: { sessionId: string },
+        update: { $set?: Partial<ChatSession> }
+      ): Promise<void> => {
+        const session = this.chatSessions.get(query.sessionId);
+        if (session && update.$set) {
+          Object.assign(session, update.$set);
+          this.chatSessions.set(query.sessionId, session);
+        }
+      },
+    };
   }
 }
 
