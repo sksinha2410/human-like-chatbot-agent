@@ -203,8 +203,18 @@ ${this.persona.name}:`;
         reply,
         sessionId: session.sessionId,
       };
-    } catch (error) {
+    } catch (error: any) {
       console.error('Chat error:', error);
+      
+      // Provide more specific error messages based on the error type
+      if (error.status === 403) {
+        throw new Error('API authentication failed. Please check your GEMINI_API_KEY configuration.');
+      } else if (error.message?.includes('API key')) {
+        throw new Error('Invalid API key. Please verify your GEMINI_API_KEY is correct.');
+      } else if (error.message?.includes('quota')) {
+        throw new Error('API quota exceeded. Please check your Google AI API usage limits.');
+      }
+      
       throw new Error('Failed to generate response');
     }
   }

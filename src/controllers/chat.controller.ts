@@ -24,10 +24,14 @@ export class ChatController {
         sessionId: result.sessionId,
         timestamp: new Date(),
       });
-    } catch (error) {
+    } catch (error: any) {
       console.error('Chat controller error:', error);
+      
+      // Return the specific error message if available
+      const errorMessage = error.message || 'Failed to process chat message';
+      
       res.status(500).json({
-        error: 'Failed to process chat message',
+        error: errorMessage,
       });
     }
   }
