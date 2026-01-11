@@ -14,7 +14,9 @@ services:
       - key: GEMINI_API_KEY
         sync: false
       - key: MONGODB_URI
-        sync: false
+        fromDatabase:
+          name: chatbot-mongodb
+          property: connectionString
       - key: CHATBOT_NAME
         value: Alex
       - key: CHATBOT_AGE
