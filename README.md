@@ -260,7 +260,7 @@ To use the live demo:
 2. **Click the ⚙️ Settings button** in the top-right corner
 3. **Enter your backend API endpoint URL**:
    - For **local development**: `http://localhost:3000` (requires running the backend locally)
-   - For **production**: Your deployed backend URL (e.g., `https://your-app.onrender.com`)
+   - For **production**: Your deployed backend URL (e.g., `https://your-app.onrender.com` or `https://human-like-chatbot-agent.onrender.com`)
 4. **Click "Save & Connect"**
 5. **Start chatting!**
 
